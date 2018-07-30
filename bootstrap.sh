@@ -168,7 +168,7 @@ sudo dnf install -y ffmpeg-libs
 # Gnome 3 Grid
 # Install using the web extensions since the installation is done using the gnome tweak tool.
 # Use the following command to set the workspace names:
-# gsettings set org.gnome.desktop.wm.preferences workspace-names "['Messaging', 'Web', 'Misc #1', 'Work #1', 'Work #2', 'Misc #2']"
+# gsettings set org.gnome.desktop.wm.preferences workspace-names "['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']"
 # gsettings set org.gnome.desktop.wm.preferences num-workspaces 6
 
 #
