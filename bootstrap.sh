@@ -24,7 +24,7 @@ sudo dnf remove -y libreoffice* libreoffice-calc libreoffice-core libreoffice-da
 #
 # Update packages
 #
-sudo dnf update
+sudo dnf update -y
 
 #
 # Default packages
@@ -60,7 +60,7 @@ ln -s $DOTFILES/user-dirs.dirs ~/.config/user-dirs.dirs
 # Node.js
 #
 curl --silent --location https://rpm.nodesource.com/setup_10.x | sudo bash -
-sudo dnf install nodejs
+sudo dnf install -y nodejs
 sudo npm install -g @angular/cli
 
 #
