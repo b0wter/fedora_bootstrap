@@ -11,28 +11,10 @@ else
 fi
 
 TEMP_DIR='~/tmp'
+TARGET_DIR='~/bootstrap'
 BIN_DIR='~/bin'
-
-#
-# Create lower case folder names.
-#
-cd ~
-rmdir Downloads
-rmdir Desktop
-rmdir Documents
-rmdir Pictures
-
-mkdir downloads
-mkdir documents
-mkdir pictures
-mkdir work
-mkdir $BIN_DIR
-
-rm -rf ~/tmp
-mkdir ~/tmp
-
-read newhostname
-hostnamectl set-hostname $newhostname
+DOTFILES='~/dotfiles'
+PWD=$(pwd)
 
 #
 # Remove bloatware
@@ -48,6 +30,31 @@ sudo dnf update
 # Default packages
 #
 sudo dnf install -y libicu libunwind awesome zsh compat-openssl10 util-linux-user mono-devel htop gcc-c++ make cmake openssl-libs openssl-devel p7zip vlc terminator nautilus-open-terminal dnf-utils mupdf feh byobu gnome-tweaks vim terminator util-linux-user dconf-editor mupdf feh git
+
+#
+# Create lower case folder names.
+#
+cd ~
+rmdir Downloads
+rmdir Desktop
+rmdir Documents
+rmdir Pictures
+mkdir downloads
+mkdir documents
+mkdir pictures
+mkdir work
+mkdir $BIN_DIR
+rm -rf ~/tmp
+mkdir ~/tmp
+cd $PWD
+
+read NEWHOSTNAME
+hostnamectl set-hostname $NEWHOSTNAME
+
+git clone https://github.com/b0wter/dotfiles.git $DOTFILES
+
+rm ~/.config/user-dirs.dirs
+ln -s $DOTFILES/user-dirs.dirs ~/.config/user-dirs.dirs
 
 #
 # Node.js
