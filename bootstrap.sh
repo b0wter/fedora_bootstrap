@@ -17,6 +17,27 @@ DOTFILES='~/dotfiles'
 PWD=$(pwd)
 
 #
+# --- Colors for echo <3 ---
+#
+NC='\e[0m' # No Color
+WHITE='\e[1;37m'
+BLACK='\e[0;30m'
+BLUE='\e[0;34m'
+LIGHT_BLUE='\e[1;34m'
+GREEN='\e[0;32m'
+LIGHT_GREEN='\e[1;32m'
+CYAN='\e[0;36m'
+LIGHT_CYAN='\e[1;36m'
+RED='\e[0;31m'
+LIGHT_RED='\e[1;31m'
+PURPLE='\e[0;35m'
+LIGHT_PURPLE='\e[1;35m'
+COLOR_BROWN='\e[0;33m'
+YELLOW='\e[1;33m'
+GRAY='\e[0;30m'
+LIGHT_GRAY='\e[0;37m'
+
+#
 # Remove bloatware
 #
 sudo dnf remove -y libreoffice* libreoffice-calc libreoffice-core libreoffice-data libreoffice-draw libreoffice-filters libreoffice-graphicfilter libreoffice-gtk2 libreoffice-gtk3 libreoffice-help-en libreoffice-impress libreoffice-langpack-en libreoffice-math libreoffice-opensymbol-fonts libreoffice-pdfimport libreoffice-pyuno libreoffice-ure libreoffice-ure-common libreoffice-writer libreoffice-x11 libreoffice-xsltfilter libreofficekit libreoffice-calc libreoffice-core vim-minimal evolution
@@ -48,9 +69,15 @@ rm -rf ~/tmp
 mkdir ~/tmp
 cd $PWD
 
-echo "Enter the new hostname:"
+echo -e "${YELLOW}Enter the new hostname:${NC}"
 read NEWHOSTNAME
 hostnamectl set-hostname $NEWHOSTNAME
+
+echo -e "${YELLOW}Generating new SSH key for this machine:${NC}"
+mkdir -p .ssh
+cd .ssh
+ssh-keygen -t ed25519 -f id_ed25519_hardman
+cd ..
 
 git clone https://github.com/b0wter/dotfiles.git $DOTFILES
 
