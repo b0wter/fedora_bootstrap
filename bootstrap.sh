@@ -40,7 +40,33 @@ LIGHT_GRAY='\e[0;37m'
 #
 # Remove bloatware
 #
-sudo dnf remove -y libreoffice* libreoffice-calc libreoffice-core libreoffice-data libreoffice-draw libreoffice-filters libreoffice-graphicfilter libreoffice-gtk2 libreoffice-gtk3 libreoffice-help-en libreoffice-impress libreoffice-langpack-en libreoffice-math libreoffice-opensymbol-fonts libreoffice-pdfimport libreoffice-pyuno libreoffice-ure libreoffice-ure-common libreoffice-writer libreoffice-x11 libreoffice-xsltfilter libreofficekit libreoffice-calc libreoffice-core vim-minimal evolution
+sudo dnf remove -y \
+    evolution \
+    libreoffice* \
+    libreoffice-calc \
+    libreoffice-core \
+    libreoffice-data \
+    libreoffice-draw \
+    libreoffice-filters \
+    libreoffice-graphicfilter \
+    libreoffice-gtk2 \
+    libreoffice-gtk3 \
+    libreoffice-help-en \
+    libreoffice-impress \
+    libreoffice-langpack-en \
+    libreoffice-math \
+    libreoffice-opensymbol-fonts \
+    libreoffice-pdfimport \
+    libreoffice-pyuno \
+    libreoffice-ure \
+    libreoffice-ure-common \
+    libreoffice-writer \
+    libreoffice-x11 \
+    libreoffice-xsltfilter \
+    libreofficekit \
+    libreoffice-calc \
+    libreoffice-core \
+    vim-minimal \
 
 #
 # Update packages
@@ -50,7 +76,32 @@ sudo dnf update -y
 #
 # Default packages
 #
-sudo dnf install -y libicu libunwind awesome zsh compat-openssl10 util-linux-user mono-devel htop gcc-c++ make cmake openssl-libs openssl-devel p7zip vlc terminator nautilus-open-terminal dnf-utils mupdf feh byobu gnome-tweaks vim terminator util-linux-user dconf-editor mupdf feh git
+sudo dnf install -y \
+    awesome \
+    byobu \
+    cmake \
+    compat-openssl10 \
+    dconf-editor \
+    dnf-utils \
+    feh \
+    gcc-c++ \
+    git \
+    gnome-tweaks \
+    htop \
+    libicu \
+    libunwind \
+    make \
+    mono-devel \
+    mupdf \
+    nautilus-open-terminal \
+    openssl-libs \
+    openssl-devel \
+    p7zip \
+    terminator \
+    util-linux-user \
+    vim \
+    vlc \
+    zsh
 
 #
 # Create lower case folder names.
