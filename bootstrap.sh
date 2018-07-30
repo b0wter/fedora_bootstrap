@@ -10,6 +10,9 @@ else
    exit 1
 fi
 
+TEMP_DIR='~/tmp'
+BIN_DIR='~/bin'
+
 #
 # Create lower case folder names.
 #
@@ -23,10 +26,13 @@ mkdir downloads
 mkdir documents
 mkdir pictures
 mkdir work
-mkdir bin
+mkdir $BIN_DIR
 
 rm -rf ~/tmp
 mkdir ~/tmp
+
+read newhostname
+hostnamectl set-hostname $newhostname
 
 #
 # Remove bloatware
@@ -66,7 +72,7 @@ sudo dnf install -y code-insiders
 sudo rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
 sudo dnf config-manager --add-repo https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
 sudo dnf install -y sublime-text
-xargs -0 -n 1 code-insiders --install-extension < <(tr \\n \\0 <~/tmp/code_addons.txt)
+xargs -0 -n 1 code-insiders --install-extension < <(tr \\n \\0 <~/$TEMP_DIR/code_addons.txt)
 
 #
 # Microsoft Repo (Powershell, .net core)
@@ -92,9 +98,9 @@ sudo npm install nativefier -g
 #
 # Postman
 #
-wget -P ~/tmp https://dl.pstmn.io/download/latest/linux64
+wget -P $TEMP_DIR https://dl.pstmn.io/download/latest/linux64
 sudo mkdir -p /opt/postman
-sudo mv ~/tmp/linux64 /opt/postman/postman
+sudo mv $TEMP_DIR/linux64 /opt/postman/postman
 
 #
 # Docker
@@ -172,7 +178,13 @@ for type in Bold Light Medium Regular Retina; do
     "https://github.com/tonsky/FiraCode/blob/master/distr/ttf/FiraCode-${type}.ttf?raw=true";
 done
 # Powerline
-git clone https://github.com/powerline/fonts.git ~/tmp/powerline
-~/tmp/powerline/install.sh
-rm -rf ~/tmp/powerline
+git clone https://github.com/powerline/fonts.git $TEMP_DIR/powerline
+$TEMP_DIR/powerline/install.sh
+rm -rf $TEMP_DIR/powerline
 fc-cache -f -v
+
+#
+# Wallpaper
+#
+wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:21.0) Gecko/20100101 Firefox/21.0" -O ~/pictures/wallpaper.jpg https://interfacelift.com/wallpaper/7yz4ma1/04128_glaciertrifecta_2560x1440.jpg
+gsettings set org.gnome.desktop.background picture-uri file:///home/b0wter/pictures/wallpaper.jpg
