@@ -48,6 +48,7 @@ rm -rf ~/tmp
 mkdir ~/tmp
 cd $PWD
 
+echo "Enter the new hostname:"
 read NEWHOSTNAME
 hostnamectl set-hostname $NEWHOSTNAME
 
