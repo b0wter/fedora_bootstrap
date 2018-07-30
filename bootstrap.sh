@@ -131,7 +131,7 @@ sudo usermod -a -G docker b0wter
 #
 # Firefox userChrome.css
 #
-# TODO
+ln -s $DOTFILES/userChrome.css $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome/userChrome.css
 
 #
 # Android Studio
