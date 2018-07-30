@@ -92,8 +92,9 @@ sudo npm install nativefier -g
 #
 # Franz
 #
-# TODO: installation
-
+wget -O $TEMP_DIR/franz https://github.com/meetfranz/franz/releases/download/v5.0.0-beta.18/franz-5.0.0-beta.18-x86_64.AppImage
+chmod +x $TEMP_DIR/franz
+mv $TEMP_DIR/franz $BIN_DIR
 
 #
 # Postman
