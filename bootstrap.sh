@@ -79,10 +79,15 @@ cd .ssh
 ssh-keygen -t ed25519 -f id_ed25519_hardman
 cd ..
 
+#
+# Dotfiles
+#
 git clone https://github.com/b0wter/dotfiles.git $DOTFILES
-
+# User dir names for X
 rm ~/.config/user-dirs.dirs
 ln -s $DOTFILES/user-dirs.dirs ~/.config/user-dirs.dirs
+# userChrome for Firefox tab bar
+ln -s $DOTFILES/userChrome.css $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome/userChrome.css
 
 #
 # Node.js
@@ -147,19 +152,6 @@ sudo dnf update
 sudo dnf install -y docker-ce
 sudo systemctl enable docker
 sudo usermod -a -G docker b0wter
-
-#
-# Restore dotfiles
-#
-# .config/user-dirs.dirs !!
-# Vim
-# zshrc
-# ZSH Theme (biraex)
-
-#
-# Firefox userChrome.css
-#
-ln -s $DOTFILES/userChrome.css $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome/userChrome.css
 
 #
 # Android Studio
