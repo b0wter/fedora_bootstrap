@@ -14,13 +14,13 @@ fi
 set -e
 
 # Folder to store temporary downloads and files.
-TEMP_DIR='~/tmp'
+TEMP_DIR='$HOME/tmp'
 # Folder to store this script.
-TARGET_DIR='~/bootstrap'
+TARGET_DIR='$HOME/bootstrap'
 # Folder containing binary files and links to executables.
-BIN_DIR='~/bin'
+BIN_DIR='$HOME/bin'
 # Folder containing all relevant config files.
-DOTFILES='~/dotfiles'
+DOTFILES='$HOME/dotfiles'
 # Current directory.
 PWD=$(pwd)
 # Store name of current user.
@@ -153,9 +153,10 @@ git clone https://github.com/b0wter/dotfiles.git $DOTFILES
 rm ~/.config/user-dirs.dirs
 ln -s $DOTFILES/user-dirs.dirs ~/.config/user-dirs.dirs
 # userChrome for Firefox tab bar
-firefox &
-sleep 20
-sudo killall firefox
+# firefox &
+# sleep 20
+# sudo killall firefox
+firefox -CreateProfile default
 mkdir -p $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome
 ln -s $DOTFILES/userChrome.css $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome/userChrome.css
 
