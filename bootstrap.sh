@@ -78,9 +78,6 @@ sudo dnf remove -y \
     libreofficekit \
     vim-minimal \
 
-sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-
 #
 # Update packages
 #
@@ -174,8 +171,12 @@ sudo npm install -g @angular/cli
 # VS Code
 #
 echo -e "${YELLOW}Installing VS Code${NC}"
-sudo dnf install -y code-insiders
-xargs -0 -n 1 code-insiders --install-extension < <(tr \\n \\0 <~/$TEMP_DIR/code_addons.txt)
+sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+sudo dnf update
+
+sudo dnf install -y code
+xargs -0 -n 1 code --install-extension < <(tr \\n \\0 <~/$TEMP_DIR/code_addons.txt)
 
 #
 # Sublime Text
