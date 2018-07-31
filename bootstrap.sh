@@ -100,7 +100,6 @@ sudo dnf install -y \
     terminator \
     util-linux-user \
     vim \
-    vlc \
     zsh
 
 #
@@ -227,7 +226,7 @@ sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-r
 sudo dnf install -y https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 sudo dnf install -y gstreamer1-{ffmpeg,libav,plugins-{good,ugly,bad{,-free,-nonfree}}} --setopt=strict=0
 sudo dnf install -y gstreamer1-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} libmpg123 lame-libs --setopt=strict=0
-sudo dnf install -y ffmpeg-libs
+sudo dnf install -y ffmpeg-libs vlc
 
 #
 # OPTIONAL NVidia Treiver
