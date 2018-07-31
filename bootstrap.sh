@@ -156,6 +156,7 @@ ln -s $DOTFILES/user-dirs.dirs ~/.config/user-dirs.dirs
 firefox &
 sleep 20
 sudo killall firefox
+mkdir -p $DOTFILES/userChrome.css $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome
 ln -s $DOTFILES/userChrome.css $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome/userChrome.css
 
 #
