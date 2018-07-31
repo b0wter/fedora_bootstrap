@@ -153,6 +153,9 @@ git clone https://github.com/b0wter/dotfiles.git $DOTFILES
 rm ~/.config/user-dirs.dirs
 ln -s $DOTFILES/user-dirs.dirs ~/.config/user-dirs.dirs
 # userChrome for Firefox tab bar
+firefox &
+sleep 20
+sudo killall firefox
 ln -s $DOTFILES/userChrome.css $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome/userChrome.css
 
 #
