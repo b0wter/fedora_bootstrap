@@ -6,15 +6,25 @@
 if [[ $EUID -ne 0 ]]; then
    echo "Running as regular using, using sudo prompts to do administrative tasks."
 else
-   echo "This script must not be run as root"
+   echo "This script must not be run as root."
    exit 1
 fi
 
+# Any subsequent commands which fail will cause the shell script to exit immediately.
+set -e
+
+# Folder to store temporary downloads and files.
 TEMP_DIR='~/tmp'
+# Folder to store this script.
 TARGET_DIR='~/bootstrap'
+# Folder containing binary files and links to executables.
 BIN_DIR='~/bin'
+# Folder containing all relevant config files.
 DOTFILES='~/dotfiles'
+# Current directory.
 PWD=$(pwd)
+# Store name of current user.
+USERNAME=$(whoami)
 
 #
 # --- Colors for echo <3 ---
@@ -40,6 +50,8 @@ LIGHT_GRAY='\e[0;37m'
 #
 # Remove bloatware
 #
+echo -e "${YELLOW}${NC}"
+echo -e "${YELLOW}Removing unnecessary packages.${NC}"
 sudo dnf remove -y \
     evolution \
     libreoffice* \
@@ -64,19 +76,20 @@ sudo dnf remove -y \
     libreoffice-x11 \
     libreoffice-xsltfilter \
     libreofficekit \
-    libreoffice-calc \
-    libreoffice-core \
     vim-minimal \
 
 #
 # Update packages
 #
+echo -e "${YELLOW}Updating the installed packages.${NC}"
 sudo dnf update -y
 
 #
 # Default packages
 #
+echo -e "${YELLOW}Installing new packages.${NC}"
 sudo dnf install -y \
+    android-tools \
     awesome \
     byobu \
     cmake \
@@ -97,6 +110,7 @@ sudo dnf install -y \
     openssl-libs \
     openssl-devel \
     p7zip \
+    snapd \
     terminator \
     util-linux-user \
     vim \
@@ -106,33 +120,35 @@ sudo dnf install -y \
 #
 # Create lower case folder names.
 #
+echo -e "${YELLOW}Remove old default folders and create new ones.${NC}"
 cd ~
 rmdir Downloads
-rmdir Desktop
-rmdir Documents
-rmdir Pictures
 mkdir downloads
+rmdir Documents
 mkdir documents
+rmdir Pictures
 mkdir pictures
-mkdir work
 mkdir $BIN_DIR
+mkdir work
+rmdir Desktop
 rm -rf ~/tmp
 mkdir ~/tmp
 cd $PWD
-
-echo -e "${YELLOW}Enter the new hostname:${NC}"
+# Read a hostname from the terminal (to set the hostname and generate a ssh keypair).
+echo -e "${BLUE}Enter the new hostname:${NC}"
 read NEWHOSTNAME
 hostnamectl set-hostname $NEWHOSTNAME
-
-echo -e "${YELLOW}Generating new SSH key for this machine:${NC}"
-mkdir -p .ssh
-cd .ssh
-ssh-keygen -t ed25519 -f id_ed25519_hardman
-cd ..
+# Generate a new ssh keypair for this machine.
+echo -e "${BLUE}Generating new SSH key for this machine:${NC}"
+mkdir -p ~/.ssh
+cd ~/.ssh
+ssh-keygen -t ed25519 -f id_ed25519_$NEWHOSTNAME
+cd -
 
 #
 # Dotfiles
 #
+echo -e "${YELLOW}Cloning and referencing dotfiles.${NC}"
 git clone https://github.com/b0wter/dotfiles.git $DOTFILES
 # User dir names for X
 rm ~/.config/user-dirs.dirs
@@ -143,6 +159,7 @@ ln -s $DOTFILES/userChrome.css $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -n
 #
 # Node.js
 #
+echo -e "${YELLOW}Installing nodejs from the official repo.${NC}"
 curl --silent --location https://rpm.nodesource.com/setup_10.x | sudo bash -
 sudo dnf install -y nodejs
 sudo npm install -g @angular/cli
@@ -150,25 +167,25 @@ sudo npm install -g @angular/cli
 #
 # VS Code
 #
-# wget -O ~/tmp/vscode.rpm http://go.microsoft.com/fwlink/?LinkId=723968
-# sudo dnf install -y ~/tmp/vscode.rpm
-# TODO: VS Code Addons
+echo -e "${YELLOW}Installing VS Code${NC}"
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
 sudo dnf install -y code-insiders
+xargs -0 -n 1 code-insiders --install-extension < <(tr \\n \\0 <~/$TEMP_DIR/code_addons.txt)
 
 #
 # Sublime Text
 #
+echo -e "${YELLOW}Installing Sublime Text${NC}"
 sudo rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg
 sudo dnf config-manager --add-repo https://download.sublimetext.com/rpm/stable/x86_64/sublime-text.repo
 sudo dnf install -y sublime-text
-xargs -0 -n 1 code-insiders --install-extension < <(tr \\n \\0 <~/$TEMP_DIR/code_addons.txt)
 
 #
 # Microsoft Repo (Powershell, .net core)
 # Installs the latest version that does not have a "rc" or "preview" in its name.
 #
+echo -e "${YELLOW}Installing dotnet sdk and powershell.${NC}"
 sudo rpm -Uvh https://packages.microsoft.com/config/rhel/7/packages-microsoft-prod.rpm
 sudo dnf update
 # find latest sdk version (excluding previews)
@@ -178,11 +195,13 @@ sudo dnf install -y $latest_sdk_version powershell
 #
 # Nativefier
 #
+echo -e "${YELLOW}Installing Nativefier.${NC}"
 sudo npm install nativefier -g
 
 #
 # Franz
 #
+echo -e "${YELLOW}Installing Franz.${NC}"
 wget -O $TEMP_DIR/franz https://github.com/meetfranz/franz/releases/download/v5.0.0-beta.18/franz-5.0.0-beta.18-x86_64.AppImage
 chmod +x $TEMP_DIR/franz
 mv $TEMP_DIR/franz $BIN_DIR
@@ -190,16 +209,19 @@ mv $TEMP_DIR/franz $BIN_DIR
 #
 # Postman
 #
-wget -P $TEMP_DIR https://dl.pstmn.io/download/latest/linux64
-sudo mkdir -p /opt/postman
-sudo mv $TEMP_DIR/linux64 /opt/postman/postman
+echo -e "${YELLOW}Installing Postman.${NC}"
+sudo snap install postman
+# wget -P $TEMP_DIR https://dl.pstmn.io/download/latest/linux64
+# sudo mkdir -p /opt/postman
+# sudo mv $TEMP_DIR/linux64 /opt/postman/postman
 
 #
 # Docker
 #
+echo -e "${YELLOW}Installing Docker using the official repo.${NC}"
 sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 sudo dnf config-manager --set-enabled docker-ce-edge
-sudo dnf update
+sudo dnf update -y
 sudo dnf install -y docker-ce
 sudo systemctl enable docker
 sudo usermod -a -G docker b0wter
@@ -211,18 +233,28 @@ sudo usermod -a -G docker b0wter
 # Goal: 
 # * install Android Studio to /opt/android/android-studio
 # * install Android SDK to /opt/android/sdk <-- might be tough because it is installed through the Android Studio initialization.
+echo -e "${YELLOW}Installing Android Studio.${NC}"
+sudo snap install android-studio
 
+#
+# Spotify
+#
+echo -e "${YELLOW}Installing Spotify.${NC}"
+sudo snap install spotify
 #
 # Fish Shell
 #
+echo -e "${YELLOW}Installing fish shell.${NC}"
 sudo dnf install -y fish
 curl -L https://get.oh-my.fish | fish
+sudo chsh -s /usr/bin/fish $USERNAME
 
 #
 # RPM Fusion
 # (first two lines add repositories, third installs minimal plugins, fourth adds some extras, fifth installs additional libs for browsers)
 # Details: https://ask.fedoraproject.org/en/question/9111/sticky-what-plugins-do-i-need-to-install-to-watch-movies-and-listen-to-music/
 #
+echo -e "${YELLOW}Installing multi media codecs.${NC}"
 sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 sudo dnf install -y https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 sudo dnf install -y gstreamer1-{ffmpeg,libav,plugins-{good,ugly,bad{,-free,-nonfree}}} --setopt=strict=0
@@ -230,33 +262,31 @@ sudo dnf install -y gstreamer1-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,
 sudo dnf install -y ffmpeg-libs
 
 #
-# OPTIONAL NVidia Treiver
-# Too complex for scripting, see:
-# https://www.if-not-true-then-false.com/2015/fedora-nvidia-guide/
-#
-
-#
 # Gnome 3 Grid
 # Install using the web extensions since the installation is done using the gnome tweak tool.
 # Use the following command to set the workspace names:
-# gsettings set org.gnome.desktop.wm.preferences workspace-names "['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']"
-# gsettings set org.gnome.desktop.wm.preferences num-workspaces 6
+echo -e "${YELLOW}Adjusting settings for the Gnome Grid Extension.${NC}"
+gsettings set org.gnome.desktop.wm.preferences workspace-names "['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']"
+gsettings set org.gnome.desktop.wm.preferences num-workspaces 6
 
 #
 # Gnome 3 DConf Settings
 #
+echo -e "${YELLOW}Editing Gnome 3 settings.${NC}"
 gsettings set org.gnome.desktop.wm.preferences button-layout "appmenu:minimize,maximize,close"
 
 #
 # Install fonts.
 #
 # Fira
+echo -e "${YELLOW}Install Fira Code fonts.${NC}"
 mkdir -p ~/.local/share/fonts
 for type in Bold Light Medium Regular Retina; do
     wget -O ~/.local/share/fonts/FiraCode-${type}.ttf \
     "https://github.com/tonsky/FiraCode/blob/master/distr/ttf/FiraCode-${type}.ttf?raw=true";
 done
 # Powerline
+echo -e "${YELLOW}Install powerline fonts.${NC}"
 git clone https://github.com/powerline/fonts.git $TEMP_DIR/powerline
 $TEMP_DIR/powerline/install.sh
 rm -rf $TEMP_DIR/powerline
@@ -265,5 +295,24 @@ fc-cache -f -v
 #
 # Wallpaper
 #
+echo -e "${YELLOW}Setting new wallpaper.${NC}"
 wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:21.0) Gecko/20100101 Firefox/21.0" -O ~/pictures/wallpaper.jpg https://interfacelift.com/wallpaper/7yz4ma1/04128_glaciertrifecta_2560x1440.jpg
 gsettings set org.gnome.desktop.background picture-uri file:///home/b0wter/pictures/wallpaper.jpg
+
+#
+# Remove this bootstrap folder.
+#
+echo -e "${YELLOW}Script finished, cleaning up.${NC}"
+cd $PWD
+rm -rf $TEMP_DIR
+rm -rf $TARGET_DIR
+echo -e "$(tput bold)Things that need to be done:$(tput sgr0)"
+echo "- add the new ssh key to VSTS/Github/whatever"
+echo "- install Gnome 3 Grid extension"
+echo "- [ install Nvidia drivers ]"
+
+#
+# OPTIONAL: Nvidia drivers
+# Too complex for scripting, see:
+# https://www.if-not-true-then-false.com/2015/fedora-nvidia-guide/
+#
