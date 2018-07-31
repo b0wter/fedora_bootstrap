@@ -122,16 +122,16 @@ sudo dnf install -y \
 echo -e "${YELLOW}Remove old default folders and create new ones.${NC}"
 cd ~
 rmdir Downloads
-mkdir downloads
+mkdir -p downloads
 rmdir Documents
-mkdir documents
+mkdir -p documents
 rmdir Pictures
-mkdir pictures
-mkdir $BIN_DIR
-mkdir work
+mkdir -p pictures
+mkdir -p $BIN_DIR
+mkdir -p work
 rmdir Desktop
 rm -rf ~/tmp
-mkdir ~/tmp
+mkdir -p ~/tmp
 cd $PWD
 # Read a hostname from the terminal (to set the hostname and generate a ssh keypair).
 echo -e "${BLUE}Enter the new hostname:${NC}"
