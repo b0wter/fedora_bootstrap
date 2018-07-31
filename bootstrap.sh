@@ -176,7 +176,7 @@ sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.m
 sudo dnf update
 
 sudo dnf install -y code
-xargs -0 -n 1 code --install-extension < <(tr \\n \\0 <~/$TEMP_DIR/code_addons.txt)
+xargs -0 -n 1 code --install-extension < <(tr \\n \\0 <$TEMP_DIR/code_addons.txt)
 
 #
 # Sublime Text
