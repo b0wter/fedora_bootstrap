@@ -178,7 +178,7 @@ sudo dnf update
 
 sudo dnf install -y code
 # xargs -0 -n 1 code --install-extension < <(tr \\n \\0 <$TARGET_DIR/code_addons.txt)
-while read line; do code --install extension "$line"; done <$TARGET_DIR/code_addons.txt
+while read line; do code --install-extension "$line"; done <$TARGET_DIR/code_addons.txt
 
 #
 # Sublime Text
