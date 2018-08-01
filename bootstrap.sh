@@ -16,11 +16,11 @@ set -e
 # Folder to store temporary downloads and files.
 TEMP_DIR=$(echo $HOME/tmp)
 # Folder to store this script.
-TARGET_DIR=$($HOME/bootstrap)
+TARGET_DIR=$(echo $HOME/bootstrap)
 # Folder containing binary files and links to executables.
-BIN_DIR=$($HOME/bin)
+BIN_DIR=$(echo $HOME/bin)
 # Folder containing all relevant config files.
-DOTFILES=$($HOME/dotfiles)
+DOTFILES=$(echo $HOME/dotfiles)
 # Current directory.
 PWD=$(pwd)
 # Store name of current user.
