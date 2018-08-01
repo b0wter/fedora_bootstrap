@@ -14,13 +14,13 @@ fi
 set -e
 
 # Folder to store temporary downloads and files.
-TEMP_DIR='$HOME/tmp'
+TEMP_DIR=$(echo $HOME/tmp)
 # Folder to store this script.
-TARGET_DIR='$HOME/bootstrap'
+TARGET_DIR=$($HOME/bootstrap)
 # Folder containing binary files and links to executables.
-BIN_DIR='$HOME/bin'
+BIN_DIR=$($HOME/bin)
 # Folder containing all relevant config files.
-DOTFILES='$HOME/dotfiles'
+DOTFILES=$($HOME/dotfiles)
 # Current directory.
 PWD=$(pwd)
 # Store name of current user.
