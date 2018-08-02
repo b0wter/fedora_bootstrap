@@ -151,10 +151,12 @@ git clone https://github.com/b0wter/dotfiles.git $DOTFILES
 # User dir names for X
 rm ~/.config/user-dirs.dirs
 ln -s $DOTFILES/user-dirs.dirs ~/.config/user-dirs.dirs
+# vimrc
+ln -s $DOTFILES/vimrc ~/.vimrc
+# terminator
+mkdir -o $HOME/.config/terminator
+ln -s $DOTFILES/terminator_config ~/.config/terminator/config
 # userChrome for Firefox tab bar
-# firefox &
-# sleep 20
-# sudo killall firefox
 firefox -CreateProfile default
 mkdir -p $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome
 ln -s $DOTFILES/userChrome.css $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome/userChrome.css
@@ -206,7 +208,9 @@ sudo dnf install -y $latest_sdk_version powershell
 #
 echo -e "${YELLOW}Installing Nativefier.${NC}"
 sudo npm install nativefier -g
-
+nativefier -n soundcloud https://soundcloud.com
+sudo mv soundcloud-linux-x64/ /opt/soundcloud
+ln -s /opt/soundcloud/soundcloud $BIN_DIR/soundcloud
 #
 # Franz
 #
@@ -255,7 +259,11 @@ sudo snap install spotify
 #
 echo -e "${YELLOW}Installing fish shell.${NC}"
 sudo dnf install -y fish
-curl -L https://get.oh-my.fish | fish
+git clone https://github.com/oh-my-fish/oh-my-fish ~/oh-my-fish
+cd ~/oh-my-fish
+bin/install --offline --noninteractive
+cd -
+rm -rf ~/oh-my-fish
 sudo chsh -s /usr/bin/fish $USERNAME
 
 #
