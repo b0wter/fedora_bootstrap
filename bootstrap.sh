@@ -301,7 +301,12 @@ gsettings set org.gnome.desktop.wm.preferences num-workspaces 6
 # Gnome 3 DConf Settings
 #
 echo -e "${YELLOW}Editing Gnome 3 settings.${NC}"
-gsettings set org.gnome.desktop.wm.preferences button-layout "appmenu:minimize,maximize,close"
+gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
+gsettings set org.gnome.desktop.interface clock-show-weekday true
+gsettings set gsettings set org.gnome.desktop.interface clock-show-weekday true
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+gsettings set org.gnome.desktop.interface monospace-font-name 'Fira Code 11'
+gsettings set org.gnome.desktop.interface show-battery-percentage true
 
 #
 # Install fonts.
