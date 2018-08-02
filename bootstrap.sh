@@ -242,8 +242,8 @@ sudo usermod -a -G docker b0wter
 # Goal: 
 # * install Android Studio to /opt/android/android-studio
 # * install Android SDK to /opt/android/sdk <-- might be tough because it is installed through the Android Studio initialization.
-echo -e "${YELLOW}Installing Android Studio.${NC}"
-sudo snap install android-studio --classic
+#
+# Snap version is currently broken for Fedora.
 
 #
 # Spotify
