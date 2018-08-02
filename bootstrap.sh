@@ -166,7 +166,9 @@ mkdir -o $HOME/.config/terminator
 ln -s $DOTFILES/terminator_config ~/.config/terminator/config
 # ssh config
 chmod 600 $DOTFILES/ssh_config
-ln -s $DOTFILES/ssh_config ~/.ssh/config
+cd ~/.ssh/
+ln -s $DOTFILES/ssh_config config
+cd -
 # userChrome for Firefox tab bar
 firefox -CreateProfile default
 mkdir -p $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome
@@ -303,10 +305,10 @@ gsettings set org.gnome.desktop.wm.preferences num-workspaces 6
 echo -e "${YELLOW}Editing Gnome 3 settings.${NC}"
 gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close'
 gsettings set org.gnome.desktop.interface clock-show-weekday true
-gsettings set gsettings set org.gnome.desktop.interface clock-show-weekday true
 gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 gsettings set org.gnome.desktop.interface monospace-font-name 'Fira Code 11'
 gsettings set org.gnome.desktop.interface show-battery-percentage true
+gsettings set org.gnome.desktop.calendar show-weekdate true
 
 #
 # Install fonts.
@@ -343,6 +345,8 @@ echo -e "$(tput bold)Things that need to be done:$(tput sgr0)"
 echo "- add the new ssh key to VSTS/Github/whatever"
 echo "- install Gnome 3 Grid extension"
 echo "- [ install Nvidia drivers ]"
+echo
+echo -e "${RED}Since the update most likely installed a new kernel module and some user relevant settings were adjusted it's recommended to restart the system.${NC}"
 
 #
 # OPTIONAL: Nvidia drivers
