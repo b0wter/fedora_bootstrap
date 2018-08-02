@@ -48,6 +48,22 @@ YELLOW='\e[1;33m'
 GRAY='\e[0;30m'
 LIGHT_GRAY='\e[0;37m'
 
+# Perform a sudo dummy command for the user prompt.
+sudo tail /proc/cpuinfo > /dev/null
+
+# Read a hostname from the terminal (to set the hostname and generate a ssh keypair).
+echo -e "${BLUE}Enter the new hostname:${NC}"
+read NEWHOSTNAME
+hostnamectl set-hostname $NEWHOSTNAME
+# Generate a new ssh keypair for this machine.
+echo -e "${BLUE}Generating new SSH key for this machine:${NC}"
+mkdir -p ~/.ssh
+cd ~/.ssh
+ssh-keygen -t $SSH_KEYGEN -f id_ed25519_$NEWHOSTNAME
+ln -s id_${SSH_KEYGEN}_${HOSTNAME} id_default
+ln -s id_${SSH_KEYGEN}_${HOSTNAME}.pub id_default.pub
+cd -
+
 #
 # Remove bloatware
 #
@@ -134,18 +150,6 @@ rmdir Desktop
 rm -rf ~/tmp
 mkdir -p ~/tmp
 cd $PWD
-# Read a hostname from the terminal (to set the hostname and generate a ssh keypair).
-echo -e "${BLUE}Enter the new hostname:${NC}"
-read NEWHOSTNAME
-hostnamectl set-hostname $NEWHOSTNAME
-# Generate a new ssh keypair for this machine.
-echo -e "${BLUE}Generating new SSH key for this machine:${NC}"
-mkdir -p ~/.ssh
-cd ~/.ssh
-ssh-keygen -t $SSH_KEYGEN -f id_ed25519_$NEWHOSTNAME
-ln -s id_${SSH_KEYGEN}_${HOSTNAME} id_default
-ln -s id_${SSH_KEYGEN}_${HOSTNAME}.pub id_default.pub
-cd -
 
 #
 # Dotfiles
