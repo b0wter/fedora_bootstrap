@@ -11,7 +11,6 @@ else
 fi
 
 # Any subsequent commands which fail will cause the shell script to exit immediately.
-set -e
 
 # Folder to store temporary downloads and files.
 TEMP_DIR=$(echo $HOME/tmp)
@@ -178,7 +177,10 @@ sudo dnf update
 
 sudo dnf install -y code
 # xargs -0 -n 1 code --install-extension < <(tr \\n \\0 <$TARGET_DIR/code_addons.txt)
+# Disable script exit on error for the installation of vs code addons.
+set +e
 while read line; do code --install-extension "$line"; done <$TARGET_DIR/code_addons.txt
+set -e
 
 #
 # Sublime Text
