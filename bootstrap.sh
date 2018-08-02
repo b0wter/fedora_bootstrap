@@ -24,6 +24,8 @@ DOTFILES=$(echo $HOME/dotfiles)
 PWD=$(pwd)
 # Store name of current user.
 USERNAME=$(whoami)
+# Keygen method for ssh keys:
+SSH_KEYGEN=ed25519
 
 #
 # --- Colors for echo <3 ---
@@ -140,7 +142,9 @@ hostnamectl set-hostname $NEWHOSTNAME
 echo -e "${BLUE}Generating new SSH key for this machine:${NC}"
 mkdir -p ~/.ssh
 cd ~/.ssh
-ssh-keygen -t ed25519 -f id_ed25519_$NEWHOSTNAME
+ssh-keygen -t $SSH_KEYGEN -f id_ed25519_$NEWHOSTNAME
+ln -s id_${SSH_KEYGEN}_${HOSTNAME} id_default
+ln -s id_${SSH_KEYGEN}_${HOSTNAME}.pub id_default.pub
 cd -
 
 #
@@ -156,6 +160,9 @@ ln -s $DOTFILES/vimrc ~/.vimrc
 # terminator
 mkdir -o $HOME/.config/terminator
 ln -s $DOTFILES/terminator_config ~/.config/terminator/config
+# ssh config
+chmod 600 $DOTFILES/ssh_config
+ln -s $DOTFILES/ssh_config ~/.ssh/config
 # userChrome for Firefox tab bar
 firefox -CreateProfile default
 mkdir -p $(find ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*")/chrome
