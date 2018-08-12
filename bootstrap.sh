@@ -11,6 +11,7 @@ else
 fi
 
 # Any subsequent commands which fail will cause the shell script to exit immediately.
+set -
 
 # Folder to store temporary downloads and files.
 TEMP_DIR=$(echo $HOME/tmp)
@@ -353,4 +354,5 @@ echo -e "${RED}Since the update most likely installed a new kernel module and so
 # OPTIONAL: Nvidia drivers
 # Too complex for scripting, see:
 # https://www.if-not-true-then-false.com/2015/fedora-nvidia-guide/
-#
+# WARNING: the guide above is missing the '--dkms' option when running the installer!
+# Without this option there is no automatic update for new kernel versions.
