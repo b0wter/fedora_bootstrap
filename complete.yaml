@@ -1,0 +1,159 @@
+LogFilename: /mnt/yaml/bootstrap.log
+GlobalVariables:
+  hostname: testman
+  bootstrapdir: /mnt/yaml
+Packages:
+- Name: base_package_install_and_update
+  IsCritical: true
+  Description: Removes unneeded packages, updates installed packages and installs needed packages.
+  Modules:
+  - !!PackageUpdate
+        RequiresElevation: true
+  - !!PackageInstall
+        RequiresElevation: true
+        SourceFile: $bootstrapdir/packages_to_install
+  - !!PackageRemoval
+        RequiresElevation: true
+        SourceFile: $bootstrapdir/packages_to_remove
+
+- Name: hostname_and_ssh
+  Description: Sets the hostname and creates a new ssh keypair.
+  Requires:
+  - dotfiles
+  Modules:
+  - !!Prompt
+        Text: Enter the hostname for this machine.
+        Color: cyan
+  - !!ReadVariable
+        VariableName: hostname
+  - !!FolderCreation
+        WorkOnParents: true
+        Foldernames:
+        - $homedir/.ssh/  
+  - !!GenericShell
+        Command: ssh-keygen 
+        Arguments: -t ed25519 -f id_ed25519_$hostname
+        WorkingDirectory: $homedir/.ssh/
+  - !!Link
+        UseSymbolicLink: true
+        Source: id_ed25519_$hostname
+        Target: id_default
+        WorkingDirectory: $homedir/.ssh/
+  - !!Link
+        UseSymbolicLink: true
+        Source: id_ed25519_$hostname.pub
+        Target: id_default.pub
+        WorkingDirectory: $homedir/.ssh/
+
+- Name: default_folders
+  Description: Replaces the default upper case folders with lower case folders.
+  IgnoreAlreadySolved: true
+  Modules:
+  - !!FolderRemoval
+        AllowError: true
+        WorkingDirectory: /home/dotnetuser
+        Foldernames:
+        - Downloads
+        - Documents
+        - Pictures
+        - Desktop
+  - !!FolderCreation
+        AllowError: true
+        WorkOnParents: true
+        WorkingDirectory: /home/dotnetuser
+        Foldernames:
+        - downloads
+        - documents
+        - pictures
+        - bin
+        - work
+        - $homedir/.ssh
+        - .config/terminator
+        - $homedir/temp
+
+- Name: vs_code
+  Description: Imports the microsoft repo key and installs vs code.
+  Requires: 
+  - base_package_install_and_update
+  Modules:
+  - !!KeyImport
+        RequiresElevation: true
+        Url: https://packages.microsoft.com/keys/microsoft.asc
+  - !!FileCopy
+        RequiresElevation: true
+        Filenames: 
+        - $bootstrapdir/vscode.repo
+        Target: /etc/yum.repos.d/
+  - !!PackageUpdate
+        RequiresElevation: true
+  - !!PackageInstall
+        RequiresElevation: true
+        PackageNames:
+        - code
+  - !!GenericShell
+        Description: Installs vs code addons from the specified file.
+        Command: $bootstrapdir/install_code_addons
+        Arguments: $bootstrapdir/code_addons.txt          
+
+- Name: dotfiles
+  Requires: 
+  - base_package_install_and_update
+  Description: Clones the dotfiles and links them properly.
+  IgnoreAlreadySolved: true
+  Modules:
+  - !!GitClone
+        Url: https://github.com/b0wter/dotfiles.git
+        Target: $homedir/dotfiles
+  - !!Link
+        Source: $homedir/dotfiles/vimrc
+        Target: $homedir/.vimrc
+  - !!Link
+        Source: $homedir/dotfiles/terminator_config
+        Target: $homedir/.config/terminator/config
+  - !!FileRemoval
+        AllowError: true
+        Filenames:
+        - $homedir/dotfiles/user-dirs.dirs
+  - !!Link
+        Source: $homedir/dotfiles/user-dirs.dirs
+        Target: $homedir/.config/user-dirs.dirs
+  - !!Link
+        Source: $homedir/dotfiles/ssh_config
+        Target: $homedir/.ssh/config
+  - !!GenericShell
+        Command: firefox
+        Arguments: -CreateProfile default
+
+- Name: nodejs
+  Description: Installs node.js from the official repo (non-Fedora).
+  Modules:
+  - !!Download
+        Url: https://rpm.nodesource.com/setup_10.x
+        Target: $homedir/temp/setup_nodejs
+  - !!GenericShell
+        Command: chmod
+        Arguments: +x $homedir/temp/setup_nodejs
+  - !!GenericShell
+        RequiresElevation: true
+        Command: $homedir/temp/setup_nodejs
+  - !!PackageInstall
+        RequiresElevation: true
+        PackageNames:
+        - nodejs
+  - !!GenericShell
+        RequiresElevation: true
+        Command: npm
+        Arguments: install -g @angular/cli
+
+CleanupPackages:
+- Name: remove_temp_files
+  IsCritical: false
+  Description: Removes temporary folders/files created while bootstrapping.
+  Modules:
+  - !!FileRemoval
+        AllowError: true
+        RequiresElevation: true
+        Recursive: true
+        Force: true
+        Filenames:
+        - $homedir/temp
