@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]
+  then
+    echo "This script needs a file containing vs code addon names to work."
+    exit 1
+fi
+
+set +e
+while read line; do code --install-extension "$line"; done <"$1"
+set -e
