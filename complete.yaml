@@ -110,10 +110,6 @@ Packages:
   - !!Link
         Source: $homedir/dotfiles/terminator_config
         Target: $homedir/.config/terminator/config
-  - !!FileRemoval
-        AllowError: true
-        Filenames:
-        - $homedir/dotfiles/user-dirs.dirs
   - !!Link
         Source: $homedir/dotfiles/user-dirs.dirs
         Target: $homedir/.config/user-dirs.dirs
@@ -123,6 +119,14 @@ Packages:
   - !!GenericShell
         Command: firefox
         Arguments: -CreateProfile default
+  - !!ShellEvaluate
+        Command: find 
+        Arguments: ~/.mozilla/firefox/ -maxdepth 1 -type d -name "*default*"
+        VariableName: ffprofilefolder
+  - !!FileCopy
+        Filenames: 
+        - $homedir/dotfiles/userChrome.css
+        Target: $ffprofilefolder/
 
 - Name: nodejs
   Description: Installs node.js from the official repo (non-Fedora).
@@ -144,6 +148,23 @@ Packages:
         RequiresElevation: true
         Command: npm
         Arguments: install -g @angular/cli
+
+- Name: powershell_and_dotnet
+  Modules:
+  - !!RepositoryImport
+        RequiresElevation: true
+        Url: https://packages.microsoft.com/config/rhel/7/packages-microsoft-prod.rpm
+  - !!PackageUpdate
+        RequiresElevation: true
+  - !!ShellEvaluate
+        Command: dnf
+        Arguments: search dotnet-sdk | grep -v preview | grep -v rc | tail -n 1 | sed 's/\s.*$//' | tr -d '\n'
+        VariableName: dotnetpackage
+  - !!PackageInstall
+        RequiresElevation: true
+        PackageNames:
+        - powershell
+        - $dotnetpackage
 
 CleanupPackages:
 - Name: remove_temp_files

@@ -6,6 +6,7 @@ compat-openssl10
 dconf-editor
 dnf-utils
 feh
+firefox
 fish
 gcc-c++
 git
