@@ -1,4 +1,5 @@
-LogFilename: /mnt/yaml/bootstrap.log
+SuccessLogFilename: /mnt/yaml/bootstrap.success
+ErrorLogFilename: /mnt/yaml/bootstrap.error
 GlobalVariables:
   hostname: testman
   bootstrapdir: /mnt/yaml
