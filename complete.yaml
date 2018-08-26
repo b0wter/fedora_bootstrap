@@ -111,8 +111,8 @@ Packages:
   - !!Link
         Source: $homedir/dotfiles/terminator_config
         Target: $homedir/.config/terminator/config
-  - !!Delete
-        ForceRemoval: true
+  - !!FileRemoval
+        Force: true
         Filenames:
         - $homedir/.config/user-dirs.dirs
   - !!Link
