@@ -150,6 +150,24 @@ Packages:
         Command: npm
         Arguments: install -g @angular/cli
 
+- Name: docker
+  Modules:
+  - !!PackageInstall
+        PackageNames:
+        - dnf-plugins-core
+  - !!Genericshell
+        Command: dnf
+        Arguments: config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  - !!Genericshell
+        Command: dnf
+        Arguments: config-manager --set-enabled docker-ce-edge
+  - !!PackageInstall
+        PackageNames:
+        - docker-ce
+  - !!ServiceStart
+        ServiceNames:
+        - docker-ce
+
 - Name: powershell_and_dotnet
   Modules:
   - !!RepositoryImport
