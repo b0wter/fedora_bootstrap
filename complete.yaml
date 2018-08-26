@@ -153,18 +153,23 @@ Packages:
 - Name: docker
   Modules:
   - !!PackageInstall
+        RequiresElevation: true
         PackageNames:
         - dnf-plugins-core
-  - !!Genericshell
+  - !!GenericShell
+        RequiresElevation: true
         Command: dnf
         Arguments: config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
-  - !!Genericshell
+  - !!GenericShell
+        RequiresElevation: true
         Command: dnf
         Arguments: config-manager --set-enabled docker-ce-edge
   - !!PackageInstall
+        RequiresElevation: true
         PackageNames:
         - docker-ce
   - !!ServiceStart
+        RequiresElevation: true
         ServiceNames:
         - docker-ce
 
