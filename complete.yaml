@@ -52,7 +52,7 @@ Packages:
   Modules:
   - !!FolderRemoval
         AllowError: true
-        WorkingDirectory: /home/dotnetuser
+        WorkingDirectory: $homedir
         Foldernames:
         - Downloads
         - Documents
@@ -61,7 +61,7 @@ Packages:
   - !!FolderCreation
         AllowError: true
         WorkOnParents: true
-        WorkingDirectory: /home/dotnetuser
+        WorkingDirectory: $homedir
         Foldernames:
         - downloads
         - documents
@@ -111,6 +111,10 @@ Packages:
   - !!Link
         Source: $homedir/dotfiles/terminator_config
         Target: $homedir/.config/terminator/config
+  - !!Delete
+        ForceRemoval: true
+        Filenames:
+        - $homedir/.config/user-dirs.dirs
   - !!Link
         Source: $homedir/dotfiles/user-dirs.dirs
         Target: $homedir/.config/user-dirs.dirs
@@ -171,7 +175,7 @@ Packages:
   - !!ServiceStart
         RequiresElevation: true
         ServiceNames:
-        - docker-ce
+        - docker
 
 - Name: powershell_and_dotnet
   Modules:
