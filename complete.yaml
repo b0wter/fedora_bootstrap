@@ -8,14 +8,14 @@ Packages:
   IsCritical: true
   Description: Removes unneeded packages, updates installed packages and installs needed packages.
   Modules:
+  - !!PackageRemoval
+        RequiresElevation: true
+        SourceFile: $bootstrapdir/packages_to_remove
   - !!PackageUpdate
         RequiresElevation: true
   - !!PackageInstall
         RequiresElevation: true
         SourceFile: $bootstrapdir/packages_to_install
-  - !!PackageRemoval
-        RequiresElevation: true
-        SourceFile: $bootstrapdir/packages_to_remove
 
 - Name: hostname_and_ssh
   Description: Sets the hostname and creates a new ssh keypair.
