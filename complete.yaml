@@ -3,6 +3,7 @@ ErrorLogFilename: /mnt/yaml/bootstrap.error
 GlobalVariables:
   hostname: testman
   bootstrapdir: /mnt/yaml
+  bindir: $homedir/bin
 Packages:
 - Name: base_package_install_and_update
   IsCritical: true
@@ -66,7 +67,7 @@ Packages:
         - downloads
         - documents
         - pictures
-        - bin
+        - $bindir
         - work
         - $homedir/.ssh
         - .config/terminator
@@ -155,6 +156,7 @@ Packages:
         Arguments: install -g @angular/cli
 
 - Name: docker
+  Description: Installs docker using the official fedora repository.
   Modules:
   - !!PackageInstall
         RequiresElevation: true
@@ -178,6 +180,7 @@ Packages:
         - docker
 
 - Name: powershell_and_dotnet
+  Description: Import MS repositories and install powershell and the latest dotnet core sdk.
   Modules:
   - !!RepositoryImport
         RequiresElevation: true
@@ -193,6 +196,147 @@ Packages:
         PackageNames:
         - powershell
         - $dotnetpackage
+
+- Name: nativefier
+  Description: Install nativefier using npm.
+  Modules:
+  - !!GenericShell
+        RequiresElevation: true
+        Command: npm
+        Arguments: install nativefier -g
+  - !!GenericShell
+        Command: nativefier
+  - !!GSettingsSet
+        Key: org.gnome.desktop.background picture-uri
+        Values: file:///home/b0wter/pictures/wallpaper.jpg
+        Arguments: -n soundcloud https://soundcloud.com
+  - !!FileCopy
+        RequiresElevation: true
+        Resursive: true
+        Filenames: 
+        - soundcloud-linux-x64
+        Target: /opt/soundcloud
+  - !!Link
+        Source: /opt/soundcloud/soundcloud
+        Target: $bindir/soundcloud
+
+- Name: postman
+  Description: Install postman using snap.
+  Modules:
+  - !!GenericShell
+        RequireElevation: true
+        Command: snap 
+        Arguments: install postman
+
+- Name: franz
+  Description: Install franz using a download from github, might be out of date.
+  Modules:
+  - !!Download
+        Url: https://github.com/meetfranz/franz/releases/download/v5.0.0-beta.18/franz-5.0.0-beta.18-x86_64.AppImage
+        Target: $homedir/temp/franz
+  - !!GenericShell
+        Command: chmod
+        Arguments: +x $homedir/temp/franz
+  - !!FileMove
+        Filenames:
+        - $homedir/temp/franz
+        Target: $bindir
+
+- Name: spotify
+  Description: Install spotify using snap.
+  Modules:
+  - !!GenericShell
+        Command: snap
+        Arguments: install spotify
+
+- Name: fish_shell
+  Description: Install fish shell and set it as a default.
+  Modules:
+  - !!PackageInstall
+        PackageNames:
+        - fish
+  - !!GitClone
+        Url: https://github.com/oh-my-fish/oh-my-fish
+        Target: $homedir/oh-my-fish
+  - !!GenericShell
+        Command: bin/install
+        Arguments: --offline --noninteractive
+        WorkingDirectory: $homedir/oh-my-fish
+  - !!FileRemoval
+        Filenames:
+        - $homedir/oh-my-fish
+        Force: true
+        Recursive: true
+  - !!GenericShell
+        RequiresElevation: true
+        Command: chsh
+        Arguments: -s /usr/bin/fish $username
+
+- Name: fonts
+  Description: Installs fira code and powerline fonts.
+  Modules:
+  - !!FolderCreation
+        AllowError: true
+        WorkOnParents: true
+        Foldernames:
+        - $homedir/.local/share/fonts
+  - !!GenericShell
+        Command: for type in Bold Light Medium Regular Retina; do wget -O ~/.local/share/fonts/FiraCode-${type}.ttf "https://github.com/tonsky/FiraCode/blob/master/distr/ttf/FiraCode-${type}.ttf?raw=true"; done
+  - !!Gitclone
+        Url: https://github.com/powerline/fonts.git
+        Target: $tempdir/powerline
+  - !!GenericShell
+        Command: install.sh
+        WorkingDirectory: $tempdir/powerline
+  - !!FolderRemoval
+        Foldernames:
+        - $tempdir/powerline
+  - !!GenericShell
+        Command: fc-cache
+        Arguments: -f -v
+
+- Name: wallpaper
+  Description: Gets the wallpaper from interfacelift and sets it by using gsettings.
+  Modules:
+  - !!Download
+        Url: https://interfacelift.com/wallpaper/7yz4ma1/04128_glaciertrifecta_2560x1440.jpg
+        UserAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:21.0) Gecko/20100101 Firefox/21.0
+        Target: $homedir/pictures/wallpaper.jpg
+  - !!GSettingsSet
+        Key: org.gnome.desktop.background picture-uri
+        Values: file:///home/b0wter/pictures/wallpaper.jpg
+
+- Name: gnome_3_settings
+  Description: Set default settings for Gnome3.
+  Requires: fonts
+  Modules:
+  - !!GSettingsSet
+        Key: org.gnome.desktop.wm.preferences workspace-names
+        Values: ['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']
+  - !!GSettingsSet
+        Key: org.gnome.desktop.wm.preferences num-workspaces
+        Value: 6
+  - !!GSettingsSet
+        Key: org.gnome.desktop.wm.preferences button-layout
+        Value: appmenu:minimize,maximize,close
+  - !!GSettingsSet
+        Key: org.gnome.desktop.interface clock-show-weekday
+        Value: true
+  - !!GSettingsSet
+        Key: org.gnome.desktop.interface gtk-theme
+        Value: Adwaita-dark
+  - !!GSettingsSet
+        Key: org.gnome.desktop.interface monospace-font-name
+        Value: Fira Code 11
+  - !!GSettingsSet
+        Key: org.gnome.desktop.interface show-battery-percentage
+        Value: true
+  - !!GSettingsSet
+        Key: org.gnome.desktop.calendar show-weekdate
+        Value: true
+  - !!GSettingsSet
+        Key: org.gnome.shell enabled-extensions
+        Value: ['background-logo@fedorahosted.org', 'launch-new-instance@gnome-shell-extensions.gcampax    .github.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'places-menu@gnome-shell-extensions.gcampax.github.com', 'alternate-    tab@gnome-shell-extensions.gcampax.github.com', 'workspace-grid@mathematical.coffee.gmail.com']
 
 CleanupPackages:
 - Name: remove_temp_files
