@@ -22,6 +22,7 @@ Packages:
   Description: Sets the hostname and creates a new ssh keypair.
   Requires:
   - dotfiles
+  - base_package_install_and_update
   Modules:
   - !!Prompt
         Text: Enter the hostname for this machine.
@@ -136,6 +137,8 @@ Packages:
 
 - Name: nodejs
   Description: Installs node.js from the official repo (non-Fedora).
+  Requires:
+  - base_package_install_and_update
   Modules:
   - !!Download
         Url: https://rpm.nodesource.com/setup_10.x
@@ -157,6 +160,8 @@ Packages:
 
 - Name: docker
   Description: Installs docker using the official fedora repository.
+  Requires:
+  - base_package_install_and_update
   Modules:
   - !!PackageInstall
         RequiresElevation: true
@@ -180,6 +185,8 @@ Packages:
         - docker
 
 - Name: powershell_and_dotnet
+  Requires:
+  - base_package_install_and_update
   Description: Import MS repositories and install powershell and the latest dotnet core sdk.
   Modules:
   - !!RepositoryImport
@@ -199,6 +206,8 @@ Packages:
 
 - Name: nativefier
   Description: Install nativefier using npm.
+  Requires: 
+  - base_package_install_and_update
   Modules:
   - !!GenericShell
         RequiresElevation: true
@@ -251,6 +260,8 @@ Packages:
 
 - Name: fish_shell
   Description: Install fish shell and set it as a default.
+  Requires: 
+  - base_package_install_and_update
   Modules:
   - !!PackageInstall
         PackageNames:
@@ -338,6 +349,32 @@ Packages:
         Key: org.gnome.shell enabled-extensions
         Value: ['background-logo@fedorahosted.org', 'launch-new-instance@gnome-shell-extensions.gcampax    .github.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'places-menu@gnome-shell-extensions.gcampax.github.com', 'alternate-    tab@gnome-shell-extensions.gcampax.github.com', 'workspace-grid@mathematical.coffee.gmail.com']
 
+- Name: rpm_fusion
+  Description: Enables the rpm fusion repos and installs multi media codecs.
+  Requires: base_package_install_and_update
+  Modules:
+  - !!PackageInstall
+        RequiresElevation: true
+        PackageNames:
+        - https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+  - !!PackageInstall
+        RequiresElevation: true
+        PackageNames:
+        - https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+  - !!PackageInstall
+        RequiresElevation: true
+        PackageNames:
+        - gstreamer1-{ffmpeg,libav,plugins-{good,ugly,bad{,-free,-nonfree}}} --setopt=strict=0
+  - !!PackageInstall
+        RequiresElevation: true
+        PackageNames:
+        - gstreamer1-{plugin-crystalhd,ffmpeg,plugins-{good,ugly,bad{,-free,-nonfree,-freeworld,-extras}{,-extras}}} libmpg123 lame-libs --setopt=strict=0
+  - !!PackageInstall
+        RequiresElevation: true
+        PackageNames:
+        - ffmpeg-libs
+        - vlc
+        
 CleanupPackages:
 - Name: remove_temp_files
   IsCritical: false
