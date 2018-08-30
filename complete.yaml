@@ -215,13 +215,10 @@ Packages:
         Arguments: install nativefier -g
   - !!GenericShell
         Command: nativefier
-  - !!GSettingsSet
-        Key: org.gnome.desktop.background picture-uri
-        Values: file:///home/b0wter/pictures/wallpaper.jpg
         Arguments: -n soundcloud https://soundcloud.com
   - !!FileCopy
         RequiresElevation: true
-        Resursive: true
+        Recursive: true
         Filenames: 
         - soundcloud-linux-x64
         Target: /opt/soundcloud
@@ -233,7 +230,7 @@ Packages:
   Description: Install postman using snap.
   Modules:
   - !!GenericShell
-        RequireElevation: true
+        RequiresElevation: true
         Command: snap 
         Arguments: install postman
 
@@ -293,7 +290,7 @@ Packages:
         - $homedir/.local/share/fonts
   - !!GenericShell
         Command: for type in Bold Light Medium Regular Retina; do wget -O ~/.local/share/fonts/FiraCode-${type}.ttf "https://github.com/tonsky/FiraCode/blob/master/distr/ttf/FiraCode-${type}.ttf?raw=true"; done
-  - !!Gitclone
+  - !!GitClone
         Url: https://github.com/powerline/fonts.git
         Target: $tempdir/powerline
   - !!GenericShell
@@ -315,15 +312,16 @@ Packages:
         Target: $homedir/pictures/wallpaper.jpg
   - !!GSettingsSet
         Key: org.gnome.desktop.background picture-uri
-        Values: file:///home/b0wter/pictures/wallpaper.jpg
+        Value: file:///home/b0wter/pictures/wallpaper.jpg
 
 - Name: gnome_3_settings
   Description: Set default settings for Gnome3.
-  Requires: fonts
+  Requires: 
+  - fonts
   Modules:
   - !!GSettingsSet
         Key: org.gnome.desktop.wm.preferences workspace-names
-        Values: ['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']
+        Value: "['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']"
   - !!GSettingsSet
         Key: org.gnome.desktop.wm.preferences num-workspaces
         Value: 6
@@ -347,11 +345,12 @@ Packages:
         Value: true
   - !!GSettingsSet
         Key: org.gnome.shell enabled-extensions
-        Value: ['background-logo@fedorahosted.org', 'launch-new-instance@gnome-shell-extensions.gcampax    .github.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'places-menu@gnome-shell-extensions.gcampax.github.com', 'alternate-    tab@gnome-shell-extensions.gcampax.github.com', 'workspace-grid@mathematical.coffee.gmail.com']
+        Value: "['background-logo@fedorahosted.org', 'launch-new-instance@gnome-shell-extensions.gcampax    .github.com', 'user-theme@gnome-shell-extensions.gcampax.github.com', 'places-menu@gnome-shell-extensions.gcampax.github.com', 'alternate-    tab@gnome-shell-extensions.gcampax.github.com', 'workspace-grid@mathematical.coffee.gmail.com']"
 
 - Name: rpm_fusion
   Description: Enables the rpm fusion repos and installs multi media codecs.
-  Requires: base_package_install_and_update
+  Requires: 
+  - base_package_install_and_update
   Modules:
   - !!PackageInstall
         RequiresElevation: true
