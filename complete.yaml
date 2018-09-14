@@ -380,7 +380,7 @@ CleanupPackages:
   Description: Removes temporary folders/files created while bootstrapping.
   Modules:
   - !!FileRemoval
-        AllowError: true
+        AllowErrors: true
         RequiresElevation: true
         Recursive: true
         Force: true
