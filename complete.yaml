@@ -1,9 +1,8 @@
-SuccessLogFilename: /mnt/yaml/bootstrap.success
-ErrorLogFilename: /mnt/yaml/bootstrap.error
 GlobalVariables:
-  hostname: testman
-  bootstrapdir: /mnt/yaml
+  hostname: hardman
+  bootstrapdir: $homedir/bootstrap
   bindir: $homedir/bin
+  tempdir: $homedir/temp
 Packages:
 - Name: base_package_install_and_update
   IsCritical: true
@@ -60,6 +59,10 @@ Packages:
         - Documents
         - Pictures
         - Desktop
+        - Music
+        - Template
+        - Videos
+        - Public
   - !!FolderCreation
         AllowError: true
         WorkOnParents: true
@@ -123,6 +126,9 @@ Packages:
   - !!Link
         Source: $homedir/dotfiles/ssh_config
         Target: $homedir/.ssh/config
+  - !!GenericShell
+        Command: chmod
+        Arguments: 644 $homedir/.ssh/config
   - !!GenericShell
         Command: firefox
         Arguments: -CreateProfile default
@@ -252,6 +258,7 @@ Packages:
   Description: Install spotify using snap.
   Modules:
   - !!GenericShell
+        RequiresElevation: true
         Command: snap
         Arguments: install spotify
 
@@ -261,6 +268,7 @@ Packages:
   - base_package_install_and_update
   Modules:
   - !!PackageInstall
+        RequiresElevation: true
         PackageNames:
         - fish
   - !!GitClone
@@ -294,10 +302,12 @@ Packages:
         Url: https://github.com/powerline/fonts.git
         Target: $tempdir/powerline
   - !!GenericShell
-        Command: install.sh
+        Command: ./install.sh
         WorkingDirectory: $tempdir/powerline
-  - !!FolderRemoval
-        Foldernames:
+  - !!FileRemoval
+        Recursive: true
+        Force: true
+        Filenames:
         - $tempdir/powerline
   - !!GenericShell
         Command: fc-cache
@@ -321,7 +331,8 @@ Packages:
   Modules:
   - !!GSettingsSet
         Key: org.gnome.desktop.wm.preferences workspace-names
-        Value: "['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']"
+        Value: >-
+                ['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']
   - !!GSettingsSet
         Key: org.gnome.desktop.wm.preferences num-workspaces
         Value: 6
@@ -380,7 +391,7 @@ CleanupPackages:
   Description: Removes temporary folders/files created while bootstrapping.
   Modules:
   - !!FileRemoval
-        AllowErrors: true
+        AllowError: true
         RequiresElevation: true
         Recursive: true
         Force: true
