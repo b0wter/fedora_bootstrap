@@ -22,6 +22,7 @@ Packages:
   Requires:
   - dotfiles
   - base_package_install_and_update
+  - vscode
   Modules:
   - !!Prompt
         Text: Enter the hostname for this machine.
@@ -77,7 +78,7 @@ Packages:
         - .config/terminator
         - $homedir/temp
 
-- Name: vs_code
+- Name: vscode
   Description: Imports the microsoft repo key and installs vs code.
   Requires: 
   - base_package_install_and_update
@@ -126,6 +127,9 @@ Packages:
   - !!Link
         Source: $homedir/dotfiles/ssh_config
         Target: $homedir/.ssh/config
+  - !!Link
+        Source: $homedir/dotfiles/vscode__settings.json
+        Target: $homedir/.config/Code/User/settings.json
   - !!GenericShell
         Command: chmod
         Arguments: 644 $homedir/.ssh/config
