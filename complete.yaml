@@ -292,6 +292,13 @@ Packages:
         Command: chsh
         Arguments: -s /usr/bin/fish $username
 
+- Name: keymap
+  Description: Switches the escape and caps keys.
+  Modules:
+  - !!GenericShell
+        Command: dconf
+        Argument: "/org/gnome/desktop/input-sources/xkb-options" "['caps:swapescape']"
+
 - Name: fonts
   Description: Installs fira code and powerline fonts.
   Modules:
@@ -336,7 +343,7 @@ Packages:
   - !!GSettingsSet
         Key: org.gnome.desktop.wm.preferences workspace-names
         Value: >-
-                ['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']
+                "['Messaging', 'Web', 'Misc', 'Terminal', 'Work #1', 'Work #2']"
   - !!GSettingsSet
         Key: org.gnome.desktop.wm.preferences num-workspaces
         Value: 6
