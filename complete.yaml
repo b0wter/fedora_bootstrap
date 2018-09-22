@@ -112,27 +112,27 @@ Packages:
         Url: https://github.com/b0wter/dotfiles.git
         Target: $homedir/dotfiles
   - !!Link
-        Source: $homedir/dotfiles/vimrc
+        Source: $homedir/dotfiles/vim__vimrc
         Target: $homedir/.vimrc
   - !!Link
-        Source: $homedir/dotfiles/terminator_config
+        Source: $homedir/dotfiles/terminator__config
         Target: $homedir/.config/terminator/config
   - !!FileRemoval
         Force: true
         Filenames:
         - $homedir/.config/user-dirs.dirs
   - !!Link
-        Source: $homedir/dotfiles/user-dirs.dirs
+        Source: $homedir/dotfiles/x__user-dirs.dirs
         Target: $homedir/.config/user-dirs.dirs
   - !!Link
-        Source: $homedir/dotfiles/ssh_config
+        Source: $homedir/dotfiles/ssh__config
         Target: $homedir/.ssh/config
   - !!Link
         Source: $homedir/dotfiles/vscode__settings.json
         Target: $homedir/.config/Code/User/settings.json
   - !!GenericShell
         Command: chmod
-        Arguments: 644 $homedir/.ssh/config
+        Arguments: 644 $homedir/.ssh/ssh__config
   - !!GenericShell
         Command: firefox
         Arguments: -CreateProfile default
