@@ -220,6 +220,23 @@ Packages:
         - powershell
         - $dotnetpackage
 
+- Name: azure_cli
+  Requires:
+  - base_package_install_and_update
+  Descriptions: Installs the azure cli tools using the official ms repos.
+  Modules:
+  - !!KeyImport
+        RequiresElevation: true
+        Url: https://packages.microsoft.com/keys/microsoft.asc
+  - !!FileCopy
+        RequiresElevation: true
+        Filenames:
+        - $bootstrapdir/system__azure-cli.repo
+        Target: /etc/yum.repos.d/azure-cli.repo
+  - !!PackageInstall
+        PackageNames:
+        - azure-cli        
+
 - Name: nativefier
   Description: Install nativefier using npm.
   Requires: 
