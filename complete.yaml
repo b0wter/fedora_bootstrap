@@ -89,8 +89,8 @@ Packages:
   - !!FileCopy
         RequiresElevation: true
         Filenames: 
-        - $bootstrapdir/vscode.repo
-        Target: /etc/yum.repos.d/
+        - $bootstrapdir/vscode__vscode.repo
+        Target: /etc/yum.repos.d/vscode.repo
   - !!PackageUpdate
         RequiresElevation: true
   - !!PackageInstall
@@ -100,7 +100,7 @@ Packages:
   - !!GenericShell
         Description: Installs vs code addons from the specified file.
         Command: $bootstrapdir/install_code_addons
-        Arguments: $bootstrapdir/code_addons.txt          
+        Arguments: $bootstrapdir/vscode__addons.txt          
 
 - Name: dotfiles
   Requires: 
