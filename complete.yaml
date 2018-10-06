@@ -223,7 +223,7 @@ Packages:
 - Name: azure_cli
   Requires:
   - base_package_install_and_update
-  Descriptions: Installs the azure cli tools using the official ms repos.
+  Description: Installs the azure cli tools using the official ms repos.
   Modules:
   - !!KeyImport
         RequiresElevation: true
@@ -320,7 +320,7 @@ Packages:
   Modules:
   - !!GenericShell
         Command: dconf
-        Argument: "/org/gnome/desktop/input-sources/xkb-options" "['caps:swapescape']"
+        Arguments: /org/gnome/desktop/input-sources/xkb-options "['caps:swapescape']"
 
 - Name: fonts
   Description: Installs fira code and powerline fonts.

@@ -21,6 +21,7 @@ nautilus-open-terminal
 openssl-libs
 openssl-devel
 p7zip
+p7zip-plugins
 snapd
 terminator
 util-linux-user
